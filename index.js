@@ -63,6 +63,35 @@ async function run() {
       res.send(result);
     });
 
+     // Getting id of each service & showing the details
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params;
+
+      const query = { _id: new ObjectId(id) };
+      const result = await petServices.findOne(query);
+      res.send(result);
+    });
+
+    app.get("/my-services", async (req, res) => {
+      const { email } = req.query;
+      const query = { email: email };
+      const result = await petServices.find(query).toArray();
+      res.send(result);
+    });
+
+    app.put("/update/:id", async (req, res) => {
+      const data = req.body;
+      const id = req.params;
+      const query = { _id: new ObjectId(id) };
+
+      const updateServices = {
+        $set: data,
+      };
+
+      const result = await petServices.updateOne(query, updateServices);
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
