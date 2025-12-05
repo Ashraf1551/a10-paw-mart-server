@@ -37,6 +37,23 @@ async function run() {
       res.send(result);
     });
 
+    // Get service from DB
+    app.get("/services", async (req, res) => {
+      const { category, search } = req.query;
+      const query = {};
+
+      if (category) {
+        query.category = category;
+      }
+
+      if (search) {
+        query.name = { $regex: search, $options: "i" };
+      }
+
+      const result = await petServices.find(query).toArray();
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
