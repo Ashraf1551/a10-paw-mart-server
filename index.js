@@ -24,6 +24,19 @@ async function run() {
   try {
     await client.connect();
 
+    const database = client.db("petService");
+    const petServices = database.collection("services");
+
+    // post or save service to DB
+    app.post("/services", async (req, res) => {
+      const data = req.body;
+      console.log(data);
+      const date = new Date();
+      data.createdAt = date;
+      const result = await petServices.insertOne(data);
+      res.send(result);
+    });
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
@@ -41,5 +54,3 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on ${port}`);
 });
-
-
