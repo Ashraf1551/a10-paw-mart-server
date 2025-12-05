@@ -1,7 +1,7 @@
+require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
 const port = 3000;
 
 const app = express();
@@ -9,8 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // Cloud MongoDB (MongoDB Atlas)
-const uri =
-  "mongodb+srv://a10-pet-stuff:IwUiR5JanfQFpV6e@aae.bclhfhx.mongodb.net/?appName=aae";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}.bclhfhx.mongodb.net/?appName=aae`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -22,7 +21,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
     const database = client.db("petService");
     const petServices = database.collection("services");
@@ -122,7 +121,7 @@ async function run() {
       res.send(result);
     });
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
